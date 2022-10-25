@@ -17,6 +17,7 @@ use App\Http\Controllers\Api\V1\FicheroController as FicheroV1;
 */
 
 Route::post('/auth/login', [LoginV1::class, 'login']);
+Route::post('/auth/signup', [LoginV1::class, 'signup']);
 
 Route::group(['prefix' => 'V1/ficheros', 'middleware' => ['auth:sanctum','throttle:3,1']], function() {
 

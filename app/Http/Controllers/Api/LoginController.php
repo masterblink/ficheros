@@ -13,6 +13,31 @@ use Hash;
 
 class LoginController extends Controller
 {
+    public function signup(Request $request)
+    {
+        $validator = Validator::make($request->all(),[
+            'name'       => 'required|string',
+            'email'      => 'required|string|email|unique:users',
+            'password'   => 'required|min:8|regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'data' => $validator->errors(),
+                'message' => 'Invalid parameters',
+            ], 422);
+        }
+        $user = new User([
+            'name'       => $request->name,
+            'email'      => $request->email,
+            'password'   => bcrypt($request->password),
+        ]);
+        $user->save();
+
+        return response()->json([
+            'message' => 'User created successfully!'], 201);
+    }
+
     public function login(Request $request)
     {
         
